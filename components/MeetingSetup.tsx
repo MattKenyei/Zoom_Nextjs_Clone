@@ -3,7 +3,7 @@ import { DeviceSettings, VideoPreview, useCall } from "@stream-io/video-react-sd
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
-const MeetingSetup = () => {
+const MeetingSetup = ({setIsSetupComplete}: {setIsSetupComplete: (value:boolean) => void}) => {
   const [isMicCamToggledOn, setIsMicCamToggledOn] = useState(false);
   const call = useCall();
   if(!call) 
@@ -27,7 +27,11 @@ const MeetingSetup = () => {
             Disable mic & camera
         </label>
         <DeviceSettings />
-        <Button className="rounded-md bg-green-500 px-4 py-2.5">
+        <Button className="rounded-md bg-green-500 px-4 py-2.5" onClick={() => {
+            call.join()
+
+            setIsSetupComplete(true)
+        }}>
             Join Meeting
         </Button>
       </div>
