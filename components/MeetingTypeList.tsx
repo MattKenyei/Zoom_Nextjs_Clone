@@ -81,7 +81,7 @@ const MeetingTypeList = () => {
         img="/icons/recordings.svg"
         title="View recordings"
         description="Check out your recordings"
-        handleClick={() => router.push("/recordings")}
+        handleClick={async () => await router.push("/recordings")}
         className="bg-purple-1"
       />
       <HomeCard

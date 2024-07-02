@@ -14,7 +14,7 @@ const Navbar = () => {
           height={30}
           className="max-sm:size-10"
         />
-        <p className="text-[26px] text-white max-sm:hidden">MATTUM</p>
+        <p className="text-[26px] text-white max-sm:hidden">MATUM</p>
       </Link>
 
       <div className="flex-between gap-5">

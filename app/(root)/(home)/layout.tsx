@@ -1,6 +1,15 @@
 import { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "MatUM",
+  description: "Zoom clone app created by MattKenyei",
+  icons: {
+    icon:'/icons/logo.svg'
+  }
+};
 
 const HomeLayout = ({ children }: { children: ReactNode }) => {
   return (
