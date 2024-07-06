@@ -8,8 +8,9 @@ import Loader from "./Loader";
 import { useToast } from "./ui/use-toast";
 
 const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
-  const { endedCalls, upcomingCalls, callRecordings, isLoading } = useGetCalls();
-  const {toast} = useToast()
+  const { endedCalls, upcomingCalls, callRecordings, isLoading } =
+    useGetCalls();
+  const { toast } = useToast();
   const router = useRouter();
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
 
@@ -46,17 +47,16 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
         const callData = await Promise.all(
           callRecordings.map((meeting) => meeting.queryRecordings())
         );
-  
+
         const records = callData
           .filter((call) => call.recordings.length > 0)
           .flatMap((call) => call.recordings);
-  
+
         setRecordings(records);
       } catch (error) {
-        console.log(error)
-        toast({title: 'Try again later'})
+        console.log(error);
+        toast({ title: "Try again later" });
       }
-      
     };
 
     if (type === "recordings") fetchRecordings();
@@ -71,9 +71,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
           <MeetingCard
             key={(meeting as Call)?.id}
             title={
-              (meeting as Call).state?.custom.description.substring(0, 25) ||
-              (meeting as CallRecording).filename.substring(0, 26) ||
-              "No description"
+              (meeting as Call).state?.custom?.description?.substring(0, 25) ||
+              (meeting as CallRecording)?.filename?.substring(0, 26) ||
+              "Personal Meeting"
             }
             date={
               (meeting as Call).state?.startsAt?.toLocaleString() ||
