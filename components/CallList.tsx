@@ -2,13 +2,14 @@
 import { useGetCalls } from "@/hooks/useGetCalls";
 import { Call, CallRecording } from "@stream-io/video-react-sdk";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MeetingCard from "./MeetingCard";
 import Loader from "./Loader";
+import { useToast } from "./ui/use-toast";
 
 const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
-  const { endedCalls, upcomingCalls, callRecordings, isLoading } =
-    useGetCalls();
+  const { endedCalls, upcomingCalls, callRecordings, isLoading } = useGetCalls();
+  const {toast} = useToast()
   const router = useRouter();
   const [recordings, setRecordings] = useState<CallRecording[]>([]);
 
@@ -19,7 +20,7 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
       case "upcoming":
         return upcomingCalls;
       case "recordings":
-        return callRecordings;
+        return recordings;
 
       default:
         return [];
@@ -38,6 +39,28 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
         return "";
     }
   };
+
+  useEffect(() => {
+    const fetchRecordings = async () => {
+      try {
+        const callData = await Promise.all(
+          callRecordings.map((meeting) => meeting.queryRecordings())
+        );
+  
+        const records = callData
+          .filter((call) => call.recordings.length > 0)
+          .flatMap((call) => call.recordings);
+  
+        setRecordings(records);
+      } catch (error) {
+        console.log(error)
+        toast({title: 'Try again later'})
+      }
+      
+    };
+
+    if (type === "recordings") fetchRecordings();
+  }, [type, callRecordings, toast]);
   const calls = getCalls();
   const noCallsMessage = getNoCalls();
   if (isLoading) return <Loader />;
@@ -48,11 +71,12 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
           <MeetingCard
             key={(meeting as Call)?.id}
             title={
-              (meeting as Call).state.custom.description.substring(0, 25) ||
+              (meeting as Call).state?.custom.description.substring(0, 25) ||
+              (meeting as CallRecording).filename.substring(0, 26) ||
               "No description"
             }
             date={
-              (meeting as Call).state.startsAt?.toLocaleString() ||
+              (meeting as Call).state?.startsAt?.toLocaleString() ||
               (meeting as CallRecording).start_time.toLocaleString()
             }
             icon={
@@ -68,7 +92,9 @@ const CallList = ({ type }: { type: "ended" | "upcoming" | "recordings" }) => {
                     await router.push(`${(meeting as CallRecording).url}`);
                   }
                 : async () => {
-                    await router.push(`/meeting/${(meeting as CallRecording).url}`);
+                    await router.push(
+                      `/meeting/${(meeting as CallRecording).url}`
+                    );
                   }
             }
             link={
