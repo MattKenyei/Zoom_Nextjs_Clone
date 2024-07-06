@@ -52,7 +52,7 @@ const MeetingTypeList = () => {
       });
       setCallDetails(call);
 
-      if (!values.description) router.push(`/meeting/${call.id}`);
+      if (!values.description) async() => {await router.push(`/meeting/${call.id}`)};
       toast({
         title: "Meeting Created",
       });
@@ -97,54 +97,52 @@ const MeetingTypeList = () => {
       />
       {!callDetails ? (
         <MeetModal
-          isOpen={meetingState === "isScheduleMeeting"}
+          isOpen={meetingState === 'isScheduleMeeting'}
           onClose={() => setMeetingState(undefined)}
-          title="Plan a meeting"
+          title="Create Meeting"
           handleClick={createMeeting}
-        />
-      ) : (
-        <MeetModal
-          isOpen={meetingState === "isScheduleMeeting"}
-          onClose={() => setMeetingState(undefined)}
-          title="Meeting Created"
-          className="text-center"
-          buttonText="Copy Meeting Link"
-          handleClick={() => {
-            navigator.clipboard.writeText(meetingLink)
-            toast({title: 'Link copied'})
-          }}
-          image="/icons/checked.svg"
-          buttonIcon="/icons/copy.svg"
         >
           <div className="flex flex-col gap-2.5">
-            <label className="text-base text-normal leading-4 text-sky-2">
+            <label className="text-base font-normal leading-[22.4px] text-sky-2">
               Add a description
             </label>
             <Textarea
-              className="vorder-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-              onChange={(e) => {
-                setValues({ ...values, description: e.target.value });
-              }}
+              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+              onChange={(e) =>
+                setValues({ ...values, description: e.target.value })
+              }
             />
           </div>
           <div className="flex w-full flex-col gap-2.5">
-            <label className="text-base text-normal leading-4 text-sky-2">
-              Select date & time
+            <label className="text-base font-normal leading-[22.4px] text-sky-2">
+              Select Date and Time
             </label>
             <ReactDatePicker
               selected={values.dateTime}
-              onChange={(date) => {
-                setValues({ ...values, dateTime: date! });
-              }}
+              onChange={(date) => setValues({ ...values, dateTime: date! })}
               showTimeSelect
               timeFormat="HH:mm"
-              timeIntervals={10}
+              timeIntervals={15}
               timeCaption="time"
-              dateFormat="d MMMM, yyyy h:mm aa"
+              dateFormat="MMMM d, yyyy h:mm aa"
               className="w-full rounded bg-dark-3 p-2 focus:outline-none"
             />
           </div>
         </MeetModal>
+      ) : (
+        <MeetModal
+          isOpen={meetingState === 'isScheduleMeeting'}
+          onClose={() => setMeetingState(undefined)}
+          title="Meeting Created"
+          handleClick={() => {
+            navigator.clipboard.writeText(meetingLink);
+            toast({ title: 'Link Copied' });
+          }}
+          image={'/icons/checked.svg'}
+          buttonIcon="/icons/copy.svg"
+          className="text-center"
+          buttonText="Copy Meeting Link"
+        />
       )}
       <MeetModal
         isOpen={meetingState === "isNewMeeting"}
