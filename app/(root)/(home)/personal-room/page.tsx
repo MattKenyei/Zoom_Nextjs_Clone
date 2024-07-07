@@ -46,7 +46,7 @@ const PersonalRoom = () => {
       <div className="flex w-ful flex-col gap-8 xl:max-w-[900px]">
         <Table title="Topic" desc={`${user?.username}'s room`} />
         <Table title="Meeting ID" desc={meetingId!} />
-        <Table title="Topic" desc={meetingLink} />
+        <Table title="Meeting link" desc={meetingLink} />
       </div>
       <div className="flex gap-5">
         <Button className="bg-blue-1" onClick={startRoom}>
