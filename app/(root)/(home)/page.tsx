@@ -3,7 +3,7 @@ import MeetingTypeList from "@/components/MeetingTypeList";
 const Home = () => {
   const now = new Date();
 
-  const time: string = `${now.getHours()}:${now.getMinutes()}`;
+  const time: string = `${now.getHours().toLocaleString()}:${now.getMinutes().toLocaleString()}`;
   const date: string = now.toLocaleDateString();
   return (
     <section className="flex size-full flex-col gap-10 text-white">
