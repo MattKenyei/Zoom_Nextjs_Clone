@@ -4,7 +4,7 @@ const Home = () => {
   const now = new Date();
 
   const time: string = `${now.getHours()}:${now.getMinutes()}`;
-  const date: string = now.toLocaleDateString();
+  const date: string = now.toISOString().slice(0,10).split('-').reverse().join('.');
   return (
     <section className="flex size-full flex-col gap-10 text-white">
       <div className="h-[300px] w-full rounded-[20px] bg-hero bg-cover">
